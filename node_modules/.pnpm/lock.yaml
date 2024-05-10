@@ -21,9 +21,18 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2
     devDependencies:
+      '@types/gradient-string':
+        specifier: ^1.1.6
+        version: 1.1.6
+      '@types/node':
+        specifier: ^20.12.11
+        version: 20.12.11
       tsup:
         specifier: ^8.0.2
         version: 8.0.2(typescript@5.4.5)
+      type-fest:
+        specifier: ^4.18.2
+        version: 4.18.2
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -296,6 +305,12 @@ packages:
 
   '@types/estree@1.0.5':
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
+
+  '@types/gradient-string@1.1.6':
+    resolution: {integrity: sha512-LkaYxluY4G5wR1M4AKQUal2q61Di1yVVCw42ImFTuaIoQVgmV0WP1xUaLB8zwb47mp82vWTpePI9JmrjEnJ7nQ==}
+
+  '@types/node@20.12.11':
+    resolution: {integrity: sha512-vDg9PZ/zi+Nqp6boSOT7plNuthRugEKixDv5sFTIpkE89MmNtEArAShI4mxuX2+UrLEe9pxC1vm2cjm9YlWbJw==}
 
   '@types/tinycolor2@1.4.6':
     resolution: {integrity: sha512-iEN8J0BoMnsWBqjVbWH/c0G0Hh7O21lpR2/+PrvAVgWdzL7eexIFm4JN/Wn10PTcmNdtS6U67r499mlWMXOxNw==}
@@ -727,10 +742,17 @@ packages:
       typescript:
         optional: true
 
+  type-fest@4.18.2:
+    resolution: {integrity: sha512-+suCYpfJLAe4OXS6+PPXjW3urOS4IoP9waSiLuXfLgqZODKw/aWwASvzqE886wA0kQgGy0mIWyhd87VpqIy6Xg==}
+    engines: {node: '>=16'}
+
   typescript@5.4.5:
     resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  undici-types@5.26.5:
+    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
   webidl-conversions@4.0.2:
     resolution: {integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==}
@@ -928,6 +950,14 @@ snapshots:
     optional: true
 
   '@types/estree@1.0.5': {}
+
+  '@types/gradient-string@1.1.6':
+    dependencies:
+      '@types/tinycolor2': 1.4.6
+
+  '@types/node@20.12.11':
+    dependencies:
+      undici-types: 5.26.5
 
   '@types/tinycolor2@1.4.6': {}
 
@@ -1348,7 +1378,11 @@ snapshots:
       - supports-color
       - ts-node
 
+  type-fest@4.18.2: {}
+
   typescript@5.4.5: {}
+
+  undici-types@5.26.5: {}
 
   webidl-conversions@4.0.2: {}
 
