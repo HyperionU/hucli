@@ -2,9 +2,10 @@
   "name": "hucli",
   "version": "1.0.0",
   "description": "The easiest way to configure your development environment to UofH Standards.",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "typecheck": "tsc",
+    "build": "tsup"
   },
   "keywords": [],
   "author": "",
