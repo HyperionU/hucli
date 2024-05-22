@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "The easiest way to configure your development environment to UofH Standards.",
   "type": "module",
+  "bin": "./dist/index.js",
   "scripts": {
     "typecheck": "tsc",
-    "build": "tsup"
+    "build": "tsup",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist"
   },
   "keywords": [],
-  "author": "",
+  "author": "HyperionU",
   "license": "ISC",
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",

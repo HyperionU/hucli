@@ -1,8 +1,9 @@
 import * as prompt from "@clack/prompts";
 import chalk from "chalk";
-import cluster from "cluster";
+/* import cluster from "cluster";*/
 import { Command } from "commander";
 import { Packages } from "../installers";
+import gradient from "gradient-string";
 
 interface cliFlags {
     default: boolean,
@@ -176,6 +177,92 @@ export const runCLI = async (): Promise<cliResults> => {
         return cliResults;
     }
 
+    prompt.intro(gradient.atlas("HUCLI"))
+    const runNitrox = await prompt.confirm({
+            message: "Do you want to start the new Nitrox DevKit?",
+        }
+    )
+
+    if (runNitrox === true) {
+        cliResults.flags.nitrox = true;
+    }
+
+    const config = await prompt.group({
+        packageSet: () => {return prompt.select({
+            message: "Which set would you like to install?",
+            options: [
+                {value: "std", label: "Standard"},
+                {value: "slim", label: "Slim"},
+                {value: "sslim", label: "SuperSlim"},
+            /*    {value: "custom", label: "Custom"}, */
+            ],
+            initialValue: "std"
+        })},
+        /* pkgs: ({results}) => results.packageSet === "custom" ? prompt.note(chalk.redBright("Not Available. Using SuperSlim.")) prompt.multiselect({
+            message: "Which packages would you like to install?",
+            options: [
+                {value: "vsIcons", label: "VSCode Icons"},
+                {value: "night", label: "Tokyo Night"},
+                {value: "mdLint", label: "MarkdownLint"},
+                {value: "gitLens", label: "GitLens"},
+                {value: "prettier", label: "Prettier"},
+                {value: "ghMarkdown", label: "GitHub Markdown"},
+                {value: "htmlHint", label: "HTMLHint"},
+                {value: "marp", label: "Marp for VS Code"},
+                {value: "ghActions", label: "GitHub Actions"},
+            ]
+        }): undefined,*/
+    },
+        { onCancel()  {process.exit(1) } }
+    );
+
+    const packages: Packages[] = [];
+
+    switch (config.packageSet) {
+        case "std":
+            let stdPackages: Packages[] = [
+                "ghActions", 
+                "ghMarkdown", 
+                "gitLens", 
+                "htmlHint", 
+                "marp", 
+                "mdLint", 
+                "night", 
+                "prettier", 
+                "vsIcons"
+            ];
+            for (let index in stdPackages){
+                packages.push(stdPackages[index]);
+            };
+            break;
+        case "slim":
+            let slimPackages: Packages[] = [
+                "ghActions", 
+                "htmlHint", 
+                "marp", 
+                "night",
+                "vsIcons"
+            ];
+            for (let index in slimPackages){
+                packages.push(slimPackages[index]);
+            };
+            break;
+        case "sslim":
+            let sslimPackages: Packages[] = [
+                "ghActions",  
+                "marp", 
+                "night",
+                "vsIcons"
+            ];
+            for (let index in sslimPackages){
+                packages.push(sslimPackages[index]);
+            };
+            break;
+        default:
+            break;
+    }
+
+    cliResults.packages = packages;
 
     return cliResults;
 }
