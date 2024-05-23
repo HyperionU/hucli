@@ -6,8 +6,8 @@ export default defineConfig({
   clean: true,
   entry: ["src/index.ts"],
   format: ["esm"],
-  minify: !isDev,
   target: "esnext",
+  minify: !isDev,
   outDir: "dist",
   onSuccess: isDev ? "node dist/index.js" : undefined,
 });

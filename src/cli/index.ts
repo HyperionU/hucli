@@ -2,7 +2,7 @@ import * as prompt from "@clack/prompts";
 import chalk from "chalk";
 /* import cluster from "cluster";*/
 import { Command } from "commander";
-import { Packages } from "../installers";
+import { Packages } from "../installers/index.js";
 import gradient from "gradient-string";
 
 interface cliFlags {
@@ -231,9 +231,9 @@ export const runCLI = async (): Promise<cliResults> => {
                 "prettier", 
                 "vsIcons"
             ];
-            for (let index in stdPackages){
-                packages.push(stdPackages[index]);
-            };
+            stdPackages.forEach(element => {
+                packages.push(element);
+            });
             break;
         case "slim":
             let slimPackages: Packages[] = [
@@ -243,9 +243,9 @@ export const runCLI = async (): Promise<cliResults> => {
                 "night",
                 "vsIcons"
             ];
-            for (let index in slimPackages){
-                packages.push(slimPackages[index]);
-            };
+            slimPackages.forEach(element => {
+                packages.push(element);
+            });
             break;
         case "sslim":
             let sslimPackages: Packages[] = [
@@ -254,9 +254,9 @@ export const runCLI = async (): Promise<cliResults> => {
                 "night",
                 "vsIcons"
             ];
-            for (let index in sslimPackages){
-                packages.push(sslimPackages[index]);
-            };
+            sslimPackages.forEach(element => {
+                packages.push(element);
+            });
             break;
         default:
             break;

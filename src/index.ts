@@ -1,6 +1,6 @@
 #!usr/bin/env node
 
-import { runCLI } from "./cli";
+import { runCLI } from "./cli/index.js";
 
 const main = async () => {
     const { flags, packages } = await runCLI();
