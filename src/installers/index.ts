@@ -11,4 +11,3 @@ export const packages = [
 ] as const;
 
 export type Packages = (typeof packages)[number];
-

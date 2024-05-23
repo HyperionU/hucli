@@ -1,6 +1,5 @@
 import * as prompt from "@clack/prompts";
 import chalk from "chalk";
-/* import cluster from "cluster";*/
 import { Command } from "commander";
 import { Packages } from "../installers/index.js";
 import gradient from "gradient-string";
