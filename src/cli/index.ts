@@ -3,6 +3,7 @@ import chalk from "chalk";
 import { Command } from "commander";
 import { Packages } from "../installers/index.js";
 import gradient from "gradient-string";
+import { installPackages } from "~/installers/installPackage.js";
 
 interface cliFlags {
     default: boolean,
@@ -262,6 +263,12 @@ export const runCLI = async (): Promise<cliResults> => {
     }
 
     cliResults.packages = packages;
+
+    const spinner = prompt.spinner()
+
+    spinner.start(`${gradient.atlas("Installing Extensions...")}`)
+    await installPackages(packages)
+    spinner.stop(`${gradient.atlas("Extensions installed.")}`)
 
     return cliResults;
 }

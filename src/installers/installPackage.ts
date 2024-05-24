@@ -5,24 +5,24 @@ interface extensionIDs {
     "vsIcons": string,
     "night": string,
     "mdLint": string,
-    "gitLens": string | undefined,
-    "prettier": string | undefined,
+    "gitLens": string,
+    "prettier": string,
     "ghMarkdown": string,
-    "htmlHint": string | undefined,
-    "marp": string | undefined,
-    "ghActions": string | undefined,
+    "htmlHint": string,
+    "marp": string,
+    "ghActions": string,
 }
 
 const IDs: extensionIDs = {
     vsIcons: "vscode-icons-team.vscode-icons",
     night: "enkia.tokyo-night",
     mdLint: "davidanson.vscode-markdownlint",
-    gitLens: undefined,
-    prettier: undefined,
+    gitLens: "eamodio.gitlens",
+    prettier: "esbenp.prettier-vscode",
     ghMarkdown: "bierner.github-markdown-preview",
-    htmlHint: undefined,
-    marp: undefined,
-    ghActions: undefined
+    htmlHint: "htmlhint.vscode-htmlhint",
+    marp: "marp-team.marp-vscode",
+    ghActions: "github.vscode-github-actions"
 }
 
 export async function installPackages(extensions:Packages[]) {
