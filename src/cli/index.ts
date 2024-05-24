@@ -4,6 +4,7 @@ import { Command } from "commander";
 import { Packages } from "../installers/index.js";
 import gradient from "gradient-string";
 import { installPackages } from "~/installers/installPackage.js";
+import { setTimeout } from "timers/promises";
 
 interface cliFlags {
     default: boolean,
@@ -268,6 +269,7 @@ export const runCLI = async (): Promise<cliResults> => {
 
     spinner.start(`${gradient.atlas("Installing Extensions...")}`)
     await installPackages(packages)
+    await setTimeout(1000 * packages.length, 'result')
     spinner.stop(`${gradient.atlas("Extensions installed.")}`)
 
     return cliResults;
