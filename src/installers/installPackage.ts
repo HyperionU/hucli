@@ -27,7 +27,7 @@ const IDs: extensionIDs = {
 
 export async function installPackages(extensions:Packages[]) {
     extensions.forEach(element => {
-        let elementID = IDs[element];
+        let elementID: string = IDs[element];
         exec(`code --install-extension ${elementID}`)
     });
 }

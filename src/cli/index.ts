@@ -271,6 +271,7 @@ export const runCLI = async (): Promise<cliResults> => {
     await installPackages(packages)
     await setTimeout(1000 * packages.length, 'result')
     spinner.stop(`${gradient.atlas("Extensions installed.")}`)
+    prompt.outro(`You are now ready to ${gradient.atlas("Hit The Ground Running")}!`)
 
     return cliResults;
 }
