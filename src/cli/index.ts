@@ -195,24 +195,10 @@ export const runCLI = async (): Promise<cliResults> => {
                 {value: "std", label: "Standard"},
                 {value: "slim", label: "Slim"},
                 {value: "sslim", label: "SuperSlim"},
-            /*    {value: "custom", label: "Custom"}, */
+                {value: "custom", label: "Custom"},
             ],
             initialValue: "std"
         })},
-        /* pkgs: ({results}) => results.packageSet === "custom" ? prompt.note(chalk.redBright("Not Available. Using SuperSlim.")) prompt.multiselect({
-            message: "Which packages would you like to install?",
-            options: [
-                {value: "vsIcons", label: "VSCode Icons"},
-                {value: "night", label: "Tokyo Night"},
-                {value: "mdLint", label: "MarkdownLint"},
-                {value: "gitLens", label: "GitLens"},
-                {value: "prettier", label: "Prettier"},
-                {value: "ghMarkdown", label: "GitHub Markdown"},
-                {value: "htmlHint", label: "HTMLHint"},
-                {value: "marp", label: "Marp for VS Code"},
-                {value: "ghActions", label: "GitHub Actions"},
-            ]
-        }): undefined,*/
     },
         { onCancel()  {process.exit(1) } }
     );
@@ -259,19 +245,40 @@ export const runCLI = async (): Promise<cliResults> => {
                 packages.push(element);
             });
             break;
+        case "custom":
+            const customPack = await prompt.multiselect({
+                message: "Which packages would you like to install?",
+                options: [
+                    {value: "vsIcons", label: "VSCode Icons"},
+                    {value: "night", label: "Tokyo Night"},
+                    {value: "mdLint", label: "MarkdownLint"},
+                    {value: "gitLens", label: "GitLens"},
+                    {value: "prettier", label: "Prettier"},
+                    {value: "ghMarkdown", label: "GitHub Markdown"},
+                    {value: "htmlHint", label: "HTMLHint"},
+                    {value: "marp", label: "Marp for VS Code"},
+                    {value: "ghActions", label: "GitHub Actions"},
+                ]
+            }) as Packages[];
+            let custom: Packages[] = customPack;
+            custom.forEach(element => {
+                packages.push(element);
+            });
+            break;
         default:
             break;
     }
 
     cliResults.packages = packages;
 
-    const spinner = prompt.spinner()
+    const spinner = prompt.spinner();
 
-    spinner.start(`${gradient.atlas("Installing Extensions...")}`)
-    await installPackages(packages)
-    await setTimeout(1000 * packages.length, 'result')
-    spinner.stop(`${gradient.atlas("Extensions installed.")}`)
-    prompt.outro(`You are now ready to ${gradient.atlas("Hit The Ground Running")}!`)
+    spinner.start(`${gradient.atlas("Installing Extensions...")}`);
+    await installPackages(packages);
+    await setTimeout(1000 * packages.length);
+    spinner.stop(`${gradient.atlas("Extensions installed.")}`);
+    await setTimeout(1000);
+    prompt.outro(`You are now ready to ${gradient.atlas("Hit The Ground Running")}!`);
 
     return cliResults;
 }
