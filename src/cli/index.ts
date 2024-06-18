@@ -179,14 +179,15 @@ export const runCLI = async (): Promise<cliResults> => {
     }
 
     prompt.intro(gradient.atlas("HUCLI"))
+
+    await setTimeout(1000);
+    
     const runNitrox = await prompt.confirm({
             message: "Do you want to start the new Nitrox DevKit?",
         }
     )
 
-    if (runNitrox === true) {
-        cliResults.flags.nitrox = true;
-    }
+    runNitrox === true && (cliResults.flags.nitrox = true);
 
     const config = await prompt.group({
         packageSet: () => {return prompt.select({
@@ -277,6 +278,12 @@ export const runCLI = async (): Promise<cliResults> => {
     await installPackages(packages);
     await setTimeout(1000 * packages.length);
     spinner.stop(`${gradient.atlas("Extensions installed.")}`);
+    if (cliResults.flags.nitrox) {
+        await setTimeout(1000);
+        spinner.start(`Starting ${gradient.atlas("Nitrox")} DevKit...`);
+        await setTimeout(1000);
+        spinner.stop(`${gradient.atlas("Nitrox")} DevKit running.`);
+    }
     await setTimeout(1000);
     prompt.outro(`You are now ready to ${gradient.atlas("Hit The Ground Running")}!`);
 
