@@ -159,20 +159,10 @@ export const runCLI = async (): Promise<cliResults> => {
 
     cliResults.flags = program.opts();
 
-    if (cliResults.flags.ci) {
-        cliResults.packages = [];
-        if (cliResults.flags.vsIcons) cliResults.packages.push("vsIcons");
-        if (cliResults.flags.night) cliResults.packages.push("night");
-        if (cliResults.flags.mdLint) cliResults.packages.push("mdLint");
-        if (cliResults.flags.gitLens) cliResults.packages.push("gitLens");
-        if (cliResults.flags.prettier) cliResults.packages.push("prettier");
-        if (cliResults.flags.ghMarkdown) cliResults.packages.push("ghMarkdown");
-        if (cliResults.flags.htmlHint) cliResults.packages.push("htmlHint");
-        if (cliResults.flags.marp) cliResults.packages.push("marp");
-        if (cliResults.flags.ghActions) cliResults.packages.push("ghActions");
-
-        return cliResults;
-    }
+    const nitroxPackages: Packages[] = [
+        "Astro",
+        "Tailwind"
+    ]
 
     if (cliResults.flags.default){
         return cliResults;
@@ -208,43 +198,43 @@ export const runCLI = async (): Promise<cliResults> => {
 
     switch (config.packageSet) {
         case "std":
-            let stdPackages: Packages[] = [
+            const stdPackages: Packages[] = [
                 "ghActions", 
                 "ghMarkdown", 
                 "gitLens", 
                 "htmlHint", 
                 "marp", 
                 "mdLint", 
-                "night", 
                 "prettier", 
                 "vsIcons"
             ];
             stdPackages.forEach(element => {
                 packages.push(element);
             });
+            packages.push(await themePrompt())
             break;
         case "slim":
-            let slimPackages: Packages[] = [
+            const slimPackages: Packages[] = [
                 "ghActions", 
                 "htmlHint", 
                 "marp", 
-                "night",
                 "vsIcons"
             ];
             slimPackages.forEach(element => {
                 packages.push(element);
             });
+            packages.push(await themePrompt())
             break;
         case "sslim":
-            let sslimPackages: Packages[] = [
+            const sslimPackages: Packages[] = [
                 "ghActions",  
                 "marp", 
-                "night",
                 "vsIcons"
             ];
             sslimPackages.forEach(element => {
                 packages.push(element);
             });
+            packages.push(await themePrompt())
             break;
         case "custom":
             const customPack = await prompt.multiselect({
@@ -252,6 +242,7 @@ export const runCLI = async (): Promise<cliResults> => {
                 options: [
                     {value: "vsIcons", label: "VSCode Icons"},
                     {value: "night", label: "Tokyo Night"},
+                    {value: "nightDark", label: "Tokyo Night Dark"},
                     {value: "mdLint", label: "MarkdownLint"},
                     {value: "gitLens", label: "GitLens"},
                     {value: "prettier", label: "Prettier"},
@@ -281,11 +272,23 @@ export const runCLI = async (): Promise<cliResults> => {
     if (cliResults.flags.nitrox) {
         await setTimeout(1000);
         spinner.start(`Starting ${gradient.atlas("Nitrox")} DevKit...`);
-        await setTimeout(1000);
+        await installPackages(nitroxPackages);
+        await setTimeout(1000 * nitroxPackages.length);
         spinner.stop(`${gradient.atlas("Nitrox")} DevKit running.`);
     }
     await setTimeout(1000);
     prompt.outro(`You are now ready to ${gradient.atlas("Hit The Ground Running")}!`);
 
     return cliResults;
+}
+
+const themePrompt = async (): Promise<Packages> => {
+    const theme = await prompt.select({
+        message: "What theme do you want to install?",
+        options: [
+            {value: "night", label: "Tokyo Night"},
+            {value: "nightDark", label: "Tokyo Night Dark"}
+        ]
+    }) as Packages
+    return theme
 }
