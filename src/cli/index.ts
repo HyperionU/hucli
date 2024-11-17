@@ -1,34 +1,15 @@
 import * as prompt from "@clack/prompts";
 import chalk from "chalk";
 import { Command } from "commander";
-import { Packages } from "../installers/index.js";
+import { Packages } from "~/installers/index.js";
 import gradient from "gradient-string";
 import { installPackages } from "~/installers/installPackage.js";
 import { setTimeout } from "timers/promises";
+import { getUserPkgManager } from "~/utils/getPackageManager.js";
 
 interface cliFlags {
     default: boolean,
     nitrox: boolean,
-    /** @internal used in CI. */
-    ci: boolean,
-    /** @internal Used in CI. */
-    vsIcons: boolean;
-    /** @internal Used in CI. */
-    night: boolean;
-    /** @internal Used in CI. */
-    mdLint: boolean;
-    /** @internal Used in CI. */
-    gitLens: boolean;
-    /** @internal Used in CI. */
-    prettier: boolean;
-    /** @internal Used in CI. */
-    ghMarkdown: boolean;
-    /** @internal Used in CI. */
-    htmlHint: boolean;
-    /** @internal Used in CI. */
-    marp: boolean;
-    /** @internal Used in CI. */
-    ghActions: boolean;
 }
 
 interface cliResults {
@@ -40,25 +21,6 @@ const defaultOptions: cliResults = {
     flags: {
         default: false,
         nitrox: false,
-        ci: false,
-        /** @internal Used in CI. */
-        vsIcons: false,
-        /** @internal Used in CI. */
-        night: false,
-        /** @internal Used in CI. */
-        mdLint: false,
-        /** @internal Used in CI. */
-        gitLens: false,
-        /** @internal Used in CI. */
-        prettier: false,
-        /** @internal Used in CI. */
-        ghMarkdown: false,
-        /** @internal Used in CI. */
-        htmlHint: false,
-        /** @internal Used in CI. */
-        marp: false,
-        /** @internal Used in CI. */
-        ghActions: false,
     },
     packages: ["vsIcons", "night", "marp", "ghActions"]
 }
@@ -79,71 +41,6 @@ export const runCLI = async (): Promise<cliResults> => {
         "Skip the CLI and bootstrap a new environment using defaults.",
         false
     )
-    /** START CI FLAGS */
-    /** 
-     * @experimental Used for CI Testing. IF any are added, we skip prompts and install based on
-     *               flags given.
-    */
-    .option(
-        "--ci",
-        "Run CLI in CI mode (Skip prompts and install based on flags).",
-        false
-    )
-    /** @experimental Used for CI Testing, in conjunction with `--CI` Flag. */
-    .option(
-        "--vsicons [boolean]",
-        "Experimental: Boolean if we should install vsicons. Used in conjunction with CI.",
-        (value) => !!value && value !== "false"
-    )
-    /** @experimental Used for CI Testing, in conjunction with `--CI` Flag. */
-    .option(
-        "--night [boolean]",
-        "Experimental: Boolean if we should install Tokyo Night. Used in conjunction with CI.",
-        (value) => !!value && value !== "false"
-    )
-    /** @experimental Used for CI Testing, in conjunction with `--CI` Flag. */
-    .option(
-        "--mdlint [boolean]",
-        "Experimental: Boolean if we should install MarkdownLint. Used in conjunction with CI.",
-        (value) => !!value && value !== "false"
-    )
-    /** @experimental Used for CI Testing, in conjunction with `--CI` Flag. */
-    .option(
-        "--gitlens [boolean]",
-        "Experimental: Boolean if we should install GitLens. Used in conjunction with CI.",
-        (value) => !!value && value !== "false"
-    )
-    /** @experimental Used for CI Testing, in conjunction with `--CI` Flag. */
-    .option(
-        "--prettier [boolean]",
-        "Experimental: Boolean if we should install Prettier. Used in conjunction with CI.",
-        (value) => !!value && value !== "false"
-    )
-    /** @experimental Used for CI Testing, in conjunction with `--CI` Flag. */
-    .option(
-        "--ghmd [boolean]",
-        "Experimental: Boolean if we should install GitHub Markdown Support. Used in conjunction with CI.",
-        (value) => !!value && value !== "false"
-    )
-    /** @experimental Used for CI Testing, in conjunction with `--CI` Flag. */
-    .option(
-        "--html [boolean]",
-        "Experimental: Boolean if we should install HTMLHint. Used in conjunction with CI.",
-        (value) => !!value && value !== "false"
-    )
-    /** @experimental Used for CI Testing, in conjunction with `--CI` Flag. */
-    .option(
-        "--marp [boolean]",
-        "Experimental: Boolean if we should install Marp. Used in conjunction with CI.",
-        (value) => !!value && value !== "false"
-    )
-    /** @experimental Used for CI Testing, in conjunction with `--CI` Flag. */
-    .option(
-        "--ghact [boolean]",
-        "Experimental: Boolean if we should install GitHub Actions. Used in conjunction with CI.",
-        (value) => !!value && value !== "false"
-    )
-    /** END CI FLAGS */
     .version("N/A", "-v, --version", "Display the version number")
     .addHelpText(
         "afterAll",
@@ -172,6 +69,12 @@ export const runCLI = async (): Promise<cliResults> => {
 
     await setTimeout(1000);
     
+    await prompt.confirm({
+        message: `Are you running ${getUserPkgManager()}?`
+    }).finally(() => prompt.log.message("Got it! Noted."));
+
+    await setTimeout(1000)
+
     const runNitrox = await prompt.confirm({
             message: "Do you want to start the new Nitrox DevKit?",
         }
