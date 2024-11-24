@@ -19,3 +19,14 @@ export const packages = {
 export type Packages = keyof typeof packages;
 
 export type PackageID = (typeof packages)[Packages];
+
+export interface cliFlags {
+    default: boolean,
+    nitrox: boolean,
+    turbo: boolean,
+}
+
+export interface cliResults {
+    flags: cliFlags,
+    packages: Packages[],
+}

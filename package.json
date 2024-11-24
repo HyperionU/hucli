@@ -1,5 +1,5 @@
 {
-  "name": "hucli",
+  "name": "hyperioncli",
   "version": "1.0.0",
   "description": "The easiest way to configure your development environment to UofH Standards.",
   "type": "module",
@@ -8,7 +8,12 @@
     "typecheck": "tsc",
     "build": "tsup",
     "start": "node dist/index.js",
+    "start:help": "node dist/index.js -h",
+    "start:version": "node dist/index.js -V",
+    "start:nitrox": "node dist/index.js --ntrx",
+    "start:turbo": "node dist/index.js --turbo",
     "clean": "rm -rf dist",
+    "clean:turbo": "rm -rf dist && pnpm remove -g turbo",
     "quickbuild": "tsc && tsup"
   },
   "keywords": [],

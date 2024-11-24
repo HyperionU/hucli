@@ -1,9 +1,9 @@
 import * as prompt from "@clack/prompts";
 import { setTimeout } from "timers/promises";
-import type { Packages } from "~/installers/index.js"
+import type { cliFlags, Packages } from "~/installers/index.js"
 import { PackageManager } from "./getPackageManager.js";
 
-export const configPrompt = async (packageManager: PackageManager) => {
+export const configPrompt = async (packageManager: PackageManager, flags: cliFlags) => {
     
     await setTimeout(1000)
 
@@ -13,18 +13,20 @@ export const configPrompt = async (packageManager: PackageManager) => {
 
     await setTimeout(1000)
 
-    const runNitrox = await prompt.confirm({
-        message: "Do you want to start the new Nitrox DevKit?",
-    }) as boolean;
+    const config = flags
 
-    const runTurbo = await prompt.confirm({
-        message: "Do you want to start Turbo?",
-    }) as boolean;
-
-    const config = {
-        nitrox: runNitrox,
-        turbo: runTurbo
+    /*if (!flags.nitrox) {
+        const runNitrox = await prompt.confirm({
+            message: "Do you want to start the new Nitrox DevKit?",
+        }) as boolean;
+        config.nitrox = runNitrox;
     }
+    if (!flags.turbo) {
+        const runTurbo = await prompt.confirm({
+            message: "Do you want to start Turbo?",
+        }) as boolean;
+        config.turbo = runTurbo;
+    }*/
 
     return config;
 }
