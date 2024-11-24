@@ -5,11 +5,13 @@ import { Packages } from "~/installers/index.js";
 import gradient from "gradient-string";
 import { installPackages } from "~/installers/installPackage.js";
 import { setTimeout } from "timers/promises";
-import { getUserPkgManager } from "~/utils/getPackageManager.js";
+import { packagePrompt, install, configPrompt} from "~/utils/prompts.js";
+import { PackageManager } from "~/utils/getPackageManager.js";
 
 interface cliFlags {
     default: boolean,
     nitrox: boolean,
+    turbo: boolean,
 }
 
 interface cliResults {
@@ -21,16 +23,20 @@ const defaultOptions: cliResults = {
     flags: {
         default: false,
         nitrox: false,
+        turbo: false,
     },
     packages: ["vsIcons", "night", "marp", "ghActions"]
 }
 
-export const runCLI = async (): Promise<cliResults> => {
+export const runCLI = async (packageManager: PackageManager): Promise<cliResults> => {
     const cliResults = defaultOptions;
 
     const program = new Command()
     .name("huCLI")
     .description("The easiest way to configure your development environment to UofH Standards.")
+    .version(chalk.grey("1.0.0"))
+
+    program
     .option(
         "--ntrx, --nitrox", 
         "Runs the new Nitrox bootstrapper.", 
@@ -41,18 +47,8 @@ export const runCLI = async (): Promise<cliResults> => {
         "Skip the CLI and bootstrap a new environment using defaults.",
         false
     )
-    .version("N/A", "-v, --version", "Display the version number")
-    .addHelpText(
-        "afterAll",
-        `\n U of H's Environment Standard was inspired by ${chalk
-          .hex("#E8DCFF")
-          .bold(
-            "@HyperionU"
-          )} and has been used to craft significant applications like ${chalk
-          .hex("#E24A8D")
-          .underline("https://dub.sh/Nota-Set")} \n`
-    )
-    .parse(process.argv);
+    
+    program.parse(process.argv);
 
     cliResults.flags = program.opts();
 
@@ -65,104 +61,15 @@ export const runCLI = async (): Promise<cliResults> => {
         return cliResults;
     }
 
-    prompt.intro(gradient.atlas("HUCLI"))
+    prompt.intro(gradient.atlas("HUCLI"));
 
-    await setTimeout(1000);
+    const config = await configPrompt(packageManager)
     
-    await prompt.confirm({
-        message: `Are you running ${getUserPkgManager()}?`
-    }).finally(() => prompt.log.message("Got it! Noted."));
+    config.nitrox && (cliResults.flags.nitrox = true);
 
-    await setTimeout(1000)
+    const packageSet = await packagePrompt();
 
-    const runNitrox = await prompt.confirm({
-            message: "Do you want to start the new Nitrox DevKit?",
-        }
-    )
-
-    runNitrox === true && (cliResults.flags.nitrox = true);
-
-    const config = await prompt.group({
-        packageSet: () => {return prompt.select({
-            message: "Which set would you like to install?",
-            options: [
-                {value: "std", label: "Standard"},
-                {value: "slim", label: "Slim"},
-                {value: "sslim", label: "SuperSlim"},
-                {value: "custom", label: "Custom"},
-            ],
-            initialValue: "std"
-        })},
-    },
-        { onCancel()  {process.exit(1) } }
-    );
-
-    const packages: Packages[] = [];
-
-    switch (config.packageSet) {
-        case "std":
-            const stdPackages: Packages[] = [
-                "ghActions", 
-                "ghMarkdown", 
-                "gitLens", 
-                "htmlHint", 
-                "marp", 
-                "mdLint", 
-                "prettier", 
-                "vsIcons"
-            ];
-            stdPackages.forEach(element => {
-                packages.push(element);
-            });
-            packages.push(await themePrompt())
-            break;
-        case "slim":
-            const slimPackages: Packages[] = [
-                "ghActions", 
-                "htmlHint", 
-                "marp", 
-                "vsIcons"
-            ];
-            slimPackages.forEach(element => {
-                packages.push(element);
-            });
-            packages.push(await themePrompt())
-            break;
-        case "sslim":
-            const sslimPackages: Packages[] = [
-                "ghActions",  
-                "marp", 
-                "vsIcons"
-            ];
-            sslimPackages.forEach(element => {
-                packages.push(element);
-            });
-            packages.push(await themePrompt())
-            break;
-        case "custom":
-            const customPack = await prompt.multiselect({
-                message: "Which packages would you like to install?",
-                options: [
-                    {value: "vsIcons", label: "VSCode Icons"},
-                    {value: "night", label: "Tokyo Night"},
-                    {value: "nightDark", label: "Tokyo Night Dark"},
-                    {value: "mdLint", label: "MarkdownLint"},
-                    {value: "gitLens", label: "GitLens"},
-                    {value: "prettier", label: "Prettier"},
-                    {value: "ghMarkdown", label: "GitHub Markdown"},
-                    {value: "htmlHint", label: "HTMLHint"},
-                    {value: "marp", label: "Marp for VS Code"},
-                    {value: "ghActions", label: "GitHub Actions"},
-                ]
-            }) as Packages[];
-            let custom: Packages[] = customPack;
-            custom.forEach(element => {
-                packages.push(element);
-            });
-            break;
-        default:
-            break;
-    }
+    const packages: Packages[] = await install(packageSet)
 
     cliResults.packages = packages;
 
@@ -183,15 +90,4 @@ export const runCLI = async (): Promise<cliResults> => {
     prompt.outro(`You are now ready to ${gradient.atlas("Hit The Ground Running")}!`);
 
     return cliResults;
-}
-
-const themePrompt = async (): Promise<Packages> => {
-    const theme = await prompt.select({
-        message: "What theme do you want to install?",
-        options: [
-            {value: "night", label: "Tokyo Night"},
-            {value: "nightDark", label: "Tokyo Night Dark"}
-        ]
-    }) as Packages
-    return theme
 }
