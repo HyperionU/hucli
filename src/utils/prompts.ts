@@ -2,6 +2,7 @@ import * as prompt from "@clack/prompts";
 import { setTimeout } from "timers/promises";
 import type { cliFlags, Packages } from "~/installers/index.js"
 import { PackageManager } from "./getPackageManager.js";
+import chalk from "chalk";
 
 export const configPrompt = async (packageManager: PackageManager, flags: cliFlags) => {
     
@@ -15,13 +16,13 @@ export const configPrompt = async (packageManager: PackageManager, flags: cliFla
 
     const config = flags
 
-    /*if (!flags.nitrox) {
+    if (!flags.nitrox) {
         const runNitrox = await prompt.confirm({
-            message: "Do you want to start the new Nitrox DevKit?",
+            message: `Do you want to start the new Nitrox DevKit? ${chalk.bgGray("(experimental)")}`,
         }) as boolean;
         config.nitrox = runNitrox;
     }
-    if (!flags.turbo) {
+    /*if (!flags.turbo) {
         const runTurbo = await prompt.confirm({
             message: "Do you want to start Turbo?",
         }) as boolean;
@@ -42,18 +43,21 @@ export const themePrompt = async (): Promise<Packages> => {
     return theme;
 }
 
-export const packagePrompt = async (): Promise<string> => {
-    const config = await prompt.select({
+export const packagePrompt = async () => {
+    const packages = await prompt.select({
         message: "Which set would you like to install?",
         options: [
             {value: "std", label: "Standard"},
             {value: "slim", label: "Slim"},
             {value: "sslim", label: "SuperSlim"},
             {value: "custom", label: "Custom"},
+            {value: "skip", label: "Skip"},
         ],
         initialValue: "std"
     }) as string;
-    return config;
+
+
+    return packages
 }
 
 export const install = async (packageSet: string): Promise<Packages[]> => {

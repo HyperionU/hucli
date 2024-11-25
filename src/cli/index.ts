@@ -7,8 +7,10 @@ import { installPackages } from "~/installers/installPackage.js";
 import { setTimeout } from "timers/promises";
 import { packagePrompt, install, configPrompt} from "~/utils/prompts.js";
 import { PackageManager } from "~/utils/getPackageManager.js";
-import { turboCLI } from "./turbo.js";
+/*import { turboCLI } from "./turbo.js";*/
 import { version } from "../../package.json";
+import { nitroxCLI } from "./nitrox.js";
+import { Task, tasks } from "~/utils/task.js";
 
 const defaultOptions: cliResults = {
     flags: {
@@ -26,7 +28,6 @@ const nitroxPackages: Packages[] = [
 
 export const runCLI = async (packageManager: PackageManager): Promise<cliResults> => {
     const cliResults = defaultOptions;
-    const spinner = prompt.spinner();
 
     const program = new Command()
     .name("huCLI")
@@ -34,12 +35,12 @@ export const runCLI = async (packageManager: PackageManager): Promise<cliResults
     .version(chalk.grey(version))
 
     program
-    /*.option(
+    .option(
         "--ntrx, --nitrox", 
         "Runs the new Nitrox bootstrapper.", 
         false
     )
-    .option(
+    /*.option(
         "-t, --turbo", 
         "Bootstrap a Turbo monorepo.", 
         false
@@ -59,6 +60,8 @@ export const runCLI = async (packageManager: PackageManager): Promise<cliResults
     }
 
     prompt.intro(gradient.atlas("HUCLI"));
+    await setTimeout(1000)
+    prompt.note("Let's get you configured.", gradient.atlas("Step 1:"))
 
     const config = await configPrompt(packageManager, cliResults.flags)
     
@@ -66,7 +69,6 @@ export const runCLI = async (packageManager: PackageManager): Promise<cliResults
     config.turbo && (cliResults.flags.turbo = true);
 
     const packageSet = await packagePrompt();
-
     const packages: Packages[] = await install(packageSet)
     cliResults.flags.nitrox && nitroxPackages.forEach(item => {
         packages.push(item);
@@ -74,20 +76,41 @@ export const runCLI = async (packageManager: PackageManager): Promise<cliResults
 
     cliResults.packages = packages;
 
-    spinner.start(`${gradient.atlas("Installing Extensions...")}`);
-    await installPackages(packages);
-    await setTimeout(1000 * packages.length);
-    spinner.stop(`${gradient.atlas("Extensions installed.")}`);
+    const taskSet: Task[] = [
+        {
+            title: 'Installing Extensions',
+            async task() {
+                await installPackages(packages);
+                await setTimeout(1000 * packages.length);
+                return `${gradient.atlas("Extensions installed.")}`;
+            },
+            enabled: packageSet != "skip"
+        },
+        /*{
+            title: 'Starting Turbo',
+            async task() {
+                await turboCLI(packageManager)
+                return `${gradient.passion("Turbo")} running.`;
+            },
+            enabled: cliResults.flags.turbo
+        },*/
+        {
+            title: 'Starting Nitrox DevKit',
+            async task() {
+                await setTimeout(1000)
+                return `${gradient.atlas("Nitrox")} DevKit running.`;
+            },
+            enabled: cliResults.flags.nitrox
+        },   
+    ]
+
+    await tasks(taskSet);
+
     if (cliResults.flags.nitrox) {
-        await setTimeout(1000);
-        spinner.start(`Starting ${gradient.atlas("Nitrox")} DevKit...`);
-        await setTimeout(1000);
-        spinner.stop(`${gradient.atlas("Nitrox")} DevKit running.`);
+        await setTimeout(2000)
+        await nitroxCLI(packageManager)
     }
     await setTimeout(1000);
-    if (cliResults.flags.turbo) {
-        await turboCLI(packageManager);
-    }
 
     prompt.outro(`You are now ready to ${gradient.atlas("Hit The Ground Running")}!`);
 
