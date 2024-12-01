@@ -17,6 +17,7 @@ const defaultOptions: cliResults = {
         default: false,
         nitrox: false,
         turbo: false,
+        ci: false,
     },
     packages: ["vsIcons", "night", "marp", "ghActions"]
 }
@@ -48,6 +49,11 @@ export const runCLI = async (packageManager: PackageManager): Promise<cliResults
     .option(
         "-y, --default",
         "Skip the CLI and bootstrap a new environment using defaults.",
+        false
+    )
+    .option(
+        "--ci",
+        "Boolean value for if we're running in CI mode.",
         false
     )
     
@@ -108,7 +114,7 @@ export const runCLI = async (packageManager: PackageManager): Promise<cliResults
 
     if (cliResults.flags.nitrox) {
         await setTimeout(2000)
-        await nitroxCLI(packageManager)
+        await nitroxCLI(packageManager, cliResults.flags)
     }
     await setTimeout(1000);
 
