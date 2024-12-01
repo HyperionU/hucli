@@ -46,13 +46,6 @@ export const nitroxCLI = async (packageManager: PackageManager) => {
         }
     });
 
-    switch (packageManager) {
-        case "yarn":
-            await execa({stdout: 'inherit', stderr: 'inherit'})`yarn create astro ${config.route} --template minimal --typescript ${config.typescript} ${config.runInstall ? "--install" : "--no-install"} ${config.runInstall ? "--git" : "--no-git"}`
-            break;
-        default:
-            await execa({stdout: 'inherit', stderr: 'inherit'})`${packageManager} create astro@latest ${config.route} --template minimal --typescript ${config.typescript} ${config.runInstall ? "--install" : "--no-install"} ${config.runInstall ? "--git" : "--no-git"}`
-            break;
-    }
+    await execa({stdout: 'inherit', stderr: 'inherit'})`${packageManager} create astro ${config.route} --template minimal --typescript ${config.typescript} ${config.runInstall ? "--install" : "--no-install"} ${config.initGit ? "--git" : "--no-git"}`
 
 }
