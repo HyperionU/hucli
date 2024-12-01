@@ -24,6 +24,7 @@ export interface cliFlags {
     default: boolean,
     nitrox: boolean,
     turbo: boolean,
+    ci: boolean,
 }
 
 export interface cliResults {
