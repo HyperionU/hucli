@@ -1,4 +1,4 @@
-#!usr/bin/env node
+#!/usr/bin/env node
 
 import { runCLI } from "./cli/index.js";
 import { getUserPkgManager } from "./utils/getPackageManager.js";
