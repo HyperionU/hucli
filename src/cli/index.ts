@@ -114,7 +114,7 @@ export const runCLI = async (packageManager: PackageManager): Promise<cliResults
 
     if (cliResults.flags.nitrox) {
         await setTimeout(2000)
-        await nitroxCLI(packageManager, cliResults.flags)
+        await nitroxCLI(packageManager)
     }
     await setTimeout(1000);
 
