@@ -16,7 +16,10 @@
     "clean:turbo": "rm -rf dist && pnpm remove -g turbo",
     "quickbuild": "tsc && tsup"
   },
-  "keywords": ["cli", "configure"],
+  "keywords": [
+    "cli",
+    "configure"
+  ],
   "author": "HyperionU",
   "license": "GPL-3.0-only",
   "devDependencies": {
