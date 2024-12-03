@@ -4,10 +4,11 @@ import * as prompt from "@clack/prompts"
 import gradient from "gradient-string";
 import { setTimeout } from "timers/promises";
 import { isEmpty } from "~/utils/checkDir.js";
+import { cliFlags } from "~/installers/index.js";
 
-export const nitroxCLI = async (packageManager: PackageManager) => {
+export const nitroxCLI = async (packageManager: PackageManager, flags: cliFlags) => {
 
-    prompt.note(`Welcome to ${gradient.atlas("Nitrox")}. \nLet's get you up and running.`, "Step 2.");
+    prompt.note(`Welcome to ${gradient.atlas("Nitrox")}. \nLet's get you up and running.`, `${flags.turbo ? "Step 3." : "Step 2."}`);
     await setTimeout(1000);
 
     const config = await prompt.group({

@@ -22,12 +22,12 @@ export const configPrompt = async (packageManager: PackageManager, flags: cliFla
         }) as boolean;
         config.nitrox = runNitrox;
     }
-    /*if (!flags.turbo) {
+    if (!flags.turbo) {
         const runTurbo = await prompt.confirm({
             message: "Do you want to start Turbo?",
         }) as boolean;
         config.turbo = runTurbo;
-    }*/
+    }
 
     return config;
 }

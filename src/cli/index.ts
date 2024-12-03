@@ -7,7 +7,7 @@ import { installPackages } from "~/installers/installPackage.js";
 import { setTimeout } from "timers/promises";
 import { packagePrompt, install, configPrompt} from "~/utils/prompts.js";
 import { PackageManager } from "~/utils/getPackageManager.js";
-/*import { turboCLI } from "./turbo.js";*/
+import { turboCLI } from "./turbo.js";
 import { version } from "../../package.json";
 import { nitroxCLI } from "./nitrox.js";
 import { Task, tasks } from "~/utils/task.js";
@@ -40,11 +40,11 @@ export const runCLI = async (packageManager: PackageManager): Promise<cliResults
         "Runs the new Nitrox bootstrapper.", 
         false
     )
-    /*.option(
+    .option(
         "-t, --turbo", 
         "Bootstrap a Turbo monorepo.", 
         false
-    )*/
+    )
     .option(
         "-y, --default",
         "Skip the CLI and bootstrap a new environment using defaults.",
@@ -86,14 +86,14 @@ export const runCLI = async (packageManager: PackageManager): Promise<cliResults
             },
             enabled: packageSet != "skip"
         },
-        /*{
+        {
             title: 'Starting Turbo',
             async task() {
-                await turboCLI(packageManager)
+                await setTimeout(1000)
                 return `${gradient.passion("Turbo")} running.`;
             },
             enabled: cliResults.flags.turbo
-        },*/
+        },
         {
             title: 'Starting Nitrox DevKit',
             async task() {
@@ -106,9 +106,14 @@ export const runCLI = async (packageManager: PackageManager): Promise<cliResults
 
     await tasks(taskSet);
 
+    if (cliResults.flags.turbo) {
+        await setTimeout(1000)
+        await turboCLI(packageManager)
+    }
+
     if (cliResults.flags.nitrox) {
         await setTimeout(2000)
-        await nitroxCLI(packageManager)
+        await nitroxCLI(packageManager, cliResults.flags)
     }
     await setTimeout(1000);
 
