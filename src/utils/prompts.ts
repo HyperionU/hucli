@@ -20,6 +20,7 @@ export const configPrompt = async (packageManager: PackageManager, flags: cliFla
         switch (packageManager) {
             case "npm":
                 prompt.log.error(`${chalk.bgRedBright("ERROR:")} Nitrox currently doesn't support ${packageManager}. sorry.`)
+                await setTimeout(1000)
                 break;
         
             default:
