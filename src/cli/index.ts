@@ -37,12 +37,12 @@ export const runCLI = async (packageManager: PackageManager): Promise<cliResults
     program
     .option(
         "--ntrx, --nitrox", 
-        "Runs the new Nitrox bootstrapper.", 
+        `Runs the new Nitrox bootstrapper. ${chalk.bgRedBright("EXPERIMENTAL")}`, 
         false
     )
     .option(
         "-t, --turbo", 
-        "Bootstrap a Turbo monorepo.", 
+        `Bootstrap a Turbo monorepo. ${chalk.bgRedBright("EXPERIMENTAL")}`, 
         false
     )
     .option(
