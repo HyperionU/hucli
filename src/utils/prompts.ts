@@ -17,10 +17,18 @@ export const configPrompt = async (packageManager: PackageManager, flags: cliFla
     const config = flags
 
     if (!flags.nitrox) {
-        const runNitrox = await prompt.confirm({
-            message: `Do you want to start the new Nitrox DevKit? ${chalk.bgGray("(experimental)")}`,
-        }) as boolean;
-        config.nitrox = runNitrox;
+        switch (packageManager) {
+            case "npm":
+                prompt.log.error(`${chalk.bgRedBright("ERROR:")} Nitrox currently doesn't support ${packageManager}. sorry.`)
+                break;
+        
+            default:
+                const runNitrox = await prompt.confirm({
+                    message: `Do you want to start the new Nitrox DevKit? ${chalk.bgGray("(experimental)")}`,
+                }) as boolean;
+                config.nitrox = runNitrox;
+                break;
+        }
     }
     if (!flags.turbo) {
         const runTurbo = await prompt.confirm({
