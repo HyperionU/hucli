@@ -2,7 +2,6 @@ import * as prompt from "@clack/prompts";
 import { setTimeout } from "timers/promises";
 import type { cliFlags, Packages } from "~/installers/index.js"
 import { PackageManager } from "./getPackageManager.js";
-import chalk from "chalk";
 
 export const configPrompt = async (packageManager: PackageManager, flags: cliFlags) => {
     
@@ -17,19 +16,10 @@ export const configPrompt = async (packageManager: PackageManager, flags: cliFla
     const config = flags
 
     if (!flags.nitrox) {
-        switch (packageManager) {
-            case "npm":
-                prompt.log.error(`${chalk.bgRedBright("ERROR:")} Nitrox currently doesn't support ${packageManager}. sorry.`)
-                await setTimeout(1000)
-                break;
-        
-            default:
-                const runNitrox = await prompt.confirm({
-                    message: `Do you want to start the new Nitrox DevKit? ${chalk.bgGray("(experimental)")}`,
-                }) as boolean;
-                config.nitrox = runNitrox;
-                break;
-        }
+        const runNitrox = await prompt.confirm({
+            message: "Do you want to start the new Nitrox DevKit?",
+        }) as boolean;
+        config.nitrox = runNitrox;
     }
     if (!flags.turbo) {
         const runTurbo = await prompt.confirm({
