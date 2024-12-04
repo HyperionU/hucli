@@ -47,6 +47,14 @@ export const nitroxCLI = async (packageManager: PackageManager, flags: cliFlags)
         }
     });
 
-    await execa({stdout: 'inherit', stderr: 'inherit'})`${packageManager} create astro ${config.route} --template minimal --typescript ${config.typescript} ${config.runInstall ? "--install" : "--no-install"} ${config.initGit ? "--git" : "--no-git"}`
+    switch (packageManager) {
+        case "npm":
+            await execa({stdout: 'inherit', stderr: 'inherit'})`${packageManager} create astro ${config.route} -- --template minimal --typescript ${config.typescript} ${config.runInstall ? "--install" : "--no-install"} ${config.initGit ? "--git" : "--no-git"}`
+            break;
+    
+        default:
+            await execa({stdout: 'inherit', stderr: 'inherit'})`${packageManager} create astro ${config.route} --template minimal --typescript ${config.typescript} ${config.runInstall ? "--install" : "--no-install"} ${config.initGit ? "--git" : "--no-git"}`
+            break;
+    }
 
 }
