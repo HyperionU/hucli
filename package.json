@@ -1,6 +1,6 @@
 {
   "name": "hyperioncli",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "The easiest way to configure your development environment to UofH Standards.",
   "type": "module",
   "bin": "./dist/index.js",
