@@ -3,8 +3,8 @@
         /* LANGUAGE COMPILATION OPTIONS */
         "target": "ESNext",
         "lib": ["DOM", "DOM.Iterable", "ES2021"],
-        "module": "NodeNext",
-        "moduleResolution": "nodenext",
+        "module": "ESNext",
+        "moduleResolution": "node",
         "resolveJsonModule": true,
         "allowJs": true,
         "checkJs": true,
