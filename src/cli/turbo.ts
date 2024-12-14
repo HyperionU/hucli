@@ -10,13 +10,8 @@ export const turboCLI = async (packageManager:PackageManager) => {
         case "yarn":
             await execa({stdout: 'inherit', stderr: 'inherit'})`yarn global add turbo`
             break;
-        case "pnpm":
-            await execa({stdout: 'inherit', stderr: 'inherit'})`pnpm add turbo --global`
-            break;
-        case "npm":
-            await execa({stdout: 'inherit', stderr: 'inherit'})`npm i turbo --global`
-            break;
         default:
+            await execa({stdout: 'inherit', stderr: 'inherit'})`${packageManager} install turbo --global`
             break;
     }
 
