@@ -2,14 +2,22 @@ import * as prompt from "@clack/prompts";
 import { setTimeout } from "timers/promises";
 import type { cliFlags, Packages } from "~/installers/index.js"
 import { PackageManager } from "./getPackageManager.js";
+import { cancelPrompt } from "./cancel.js";
+import { exit } from "process";
 
 export const configPrompt = async (packageManager: PackageManager, flags: cliFlags) => {
     
     await setTimeout(1000)
 
-    await prompt.confirm({
+    const checkPM = await prompt.confirm({
         message: `Are you running ${packageManager}?`
-    }).finally(() => prompt.log.message("Got it! Noted."));
+    }) as boolean;
+    
+    if (!checkPM) exit(1);
+
+    cancelPrompt(checkPM)
+
+    prompt.log.message("Got it! Noted.");
 
     await setTimeout(1000)
 
@@ -19,12 +27,14 @@ export const configPrompt = async (packageManager: PackageManager, flags: cliFla
         const runNitrox = await prompt.confirm({
             message: "Do you want to start the new Nitrox DevKit?",
         }) as boolean;
+        cancelPrompt(runNitrox)
         config.nitrox = runNitrox;
     }
     if (!flags.turbo) {
         const runTurbo = await prompt.confirm({
             message: "Do you want to start Turbo?",
         }) as boolean;
+        cancelPrompt(runTurbo)
         config.turbo = runTurbo;
     }
 

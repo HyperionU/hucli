@@ -88,6 +88,12 @@ export const nitroxCLI = async (packageManager: PackageManager, flags: cliFlags)
             required: false,
             initialValues: ["tailwind"],
         }),
+    },
+    {
+        onCancel: () => {
+            prompt.cancel("Cancelled");
+            process.exit(1)
+        }
     });
 
     const integrations = [];

@@ -4,6 +4,7 @@ import * as prompt from "@clack/prompts"
 import gradient from "gradient-string";
 import { setTimeout } from "timers/promises";
 import { isEmpty } from "~/utils/checkDir.js";
+import { cancelPrompt } from "~/utils/cancel.js";
 
 export const turboCLI = async (packageManager:PackageManager) => {
     switch (packageManager) {
@@ -33,7 +34,7 @@ const turboPrompt = async () => {
     await setTimeout(1000)
 
     const turbo = await prompt.text({
-        message: "What is the path to your new site?",
+        message: "What is the path to your new turborepo?",
         placeholder: "./turbo",
         validate: (value) => {
             if (!value) return 'Please enter a path.';
@@ -42,6 +43,8 @@ const turboPrompt = async () => {
             return;
         }
     }) as string;
+
+    cancelPrompt(turbo)
 
     return turbo;
     
