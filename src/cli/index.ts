@@ -1,14 +1,12 @@
 import * as prompt from "@clack/prompts";
-import chalk from "chalk";
-import { Command } from "commander";
-import { cliResults, Packages } from "~/installers/index.js";
+import { cliFlags, cliResults, Packages } from "~/installers/index.js";
 import gradient from "gradient-string";
 import { installPackages } from "~/installers/installPackage.js";
 import { setTimeout } from "timers/promises";
 import { packagePrompt, install, configPrompt} from "~/utils/prompts.js";
 import { PackageManager } from "~/utils/getPackageManager.js";
 import { turboCLI } from "./turbo.js";
-import { version } from "../../package.json";
+
 import { nitroxCLI } from "./nitrox.js";
 import { Task, tasks } from "~/utils/task.js";
 
@@ -26,34 +24,10 @@ const nitroxPackages: Packages[] = [
     "Tailwind"
 ]
 
-export const runCLI = async (packageManager: PackageManager): Promise<cliResults> => {
+export const runCLI = async (packageManager: PackageManager, flags: cliFlags): Promise<cliResults> => {
     const cliResults = defaultOptions;
 
-    const program = new Command()
-    .name("huCLI")
-    .description("The easiest way to configure your development environment to UofH Standards.")
-    .version(chalk.grey(version))
-
-    program
-    .option(
-        "--ntrx, --nitrox", 
-        `Runs the new Nitrox bootstrapper. ${chalk.bgRedBright("EXPERIMENTAL")}`, 
-        false
-    )
-    .option(
-        "-t, --turbo", 
-        `Bootstrap a Turbo monorepo. ${chalk.bgRedBright("EXPERIMENTAL")}`, 
-        false
-    )
-    .option(
-        "-y, --default",
-        "Skip the CLI and bootstrap a new environment using defaults.",
-        false
-    )
-    
-    program.parse(process.argv);
-
-    cliResults.flags = program.opts();
+    cliResults.flags = flags
 
     if (cliResults.flags.default){
         return cliResults;
@@ -112,7 +86,7 @@ export const runCLI = async (packageManager: PackageManager): Promise<cliResults
     }
 
     if (cliResults.flags.nitrox) {
-        await setTimeout(2000)
+        await setTimeout(1000)
         await nitroxCLI(packageManager, cliResults.flags)
     }
     await setTimeout(1000);
